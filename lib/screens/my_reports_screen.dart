@@ -9,24 +9,24 @@ class MyReportsScreen extends StatelessWidget {
     // Mock data representing the user's past reports
     final List<Map<String, dynamic>> reports = [
       {
-        'type': 'Pothole (ثقبة طريق)',
+        'type': 'Pothole',
         'location': 'Amman, Queen Rania St.',
         'date': '2026-03-12',
-        'status': 'قيد المراجعة (Pending)',
+        'status': 'Pending',
         'isResolved': false,
       },
       {
-        'type': 'Faded Lines (خطوط باهتة)',
+        'type': 'Faded Lines',
         'location': 'Amman, Mecca St.',
         'date': '2026-03-05',
-        'status': 'تم الحل (Resolved)',
+        'status': 'Resolved',
         'isResolved': true,
       },
       {
-        'type': 'Crack (تشقق)',
+        'type': 'Crack',
         'location': 'Amman, Abdullah Ghosheh St.',
         'date': '2026-02-28',
-        'status': 'تم الحل (Resolved)',
+        'status': 'Resolved',
         'isResolved': true,
       },
     ];
@@ -38,7 +38,7 @@ class MyReportsScreen extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
-          'بلاغاتي (My Reports)',
+          'My Reports',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,

@@ -13,10 +13,10 @@ class _ReportDamageScreenState extends State<ReportDamageScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   final List<String> _damageTypes = [
-    'Pothole (ثقبة طريق)',
-    'Crack (تشقق)',
-    'Faded Lines (خطوط باهتة)',
-    'Other (أخرى)'
+    'Pothole',
+    'Crack',
+    'Faded Lines',
+    'Other'
   ];
 
   @override
@@ -34,7 +34,7 @@ class _ReportDamageScreenState extends State<ReportDamageScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
-          'تأكيد الرصد (Confirm Report)',
+          'Confirm Report',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
         ),
         centerTitle: true,
@@ -47,7 +47,7 @@ class _ReportDamageScreenState extends State<ReportDamageScreen> {
           children: [
             _buildImagePreview(),
             const SizedBox(height: 24),
-            _buildSectionTitle('الموقع (Location)'),
+            _buildSectionTitle('Location'),
             const SizedBox(height: 8),
             _buildGlassContainer(
               child: Row(
@@ -59,7 +59,7 @@ class _ReportDamageScreenState extends State<ReportDamageScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            _buildSectionTitle('نوع الضرر (Damage Type)'),
+            _buildSectionTitle('Damage Type'),
             const SizedBox(height: 8),
             Wrap(
               spacing: 10,
@@ -87,7 +87,7 @@ class _ReportDamageScreenState extends State<ReportDamageScreen> {
               }).toList(),
             ),
             const SizedBox(height: 24),
-            _buildSectionTitle('تفاصيل إضافية (Description)'),
+            _buildSectionTitle('Description'),
             const SizedBox(height: 8),
             _buildGlassContainer(
               child: TextField(
@@ -118,7 +118,7 @@ class _ReportDamageScreenState extends State<ReportDamageScreen> {
                   shadowColor: const Color(0xFFFFD700).withValues(alpha: 0.5),
                 ),
                 child: const Text(
-                  'إرسال التقرير (Submit Report)',
+                  'Submit Report',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),

@@ -29,7 +29,6 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   // Center of Amman, Jordan
   final LatLng _ammanCenter = const LatLng(31.9539, 35.9106);
@@ -46,9 +45,67 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: _buildDrawer(context),
       backgroundColor: const Color(0xFF121212), // Deep dark background
+      extendBody: true, // Lets the map go under the notch
+      
+      // --- The Centered Floating Button ---
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: SizedBox(
+        height: 80, 
+        width: 80,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ReportDamageScreen()),
+            );
+          },
+          backgroundColor: const Color(0xFFFFD700), // Tareeqi Yellow
+          elevation: 4,
+          shape: const CircleBorder(),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.camera_alt, color: Color(0xFF121212), size: 32),
+              SizedBox(height: 2),
+              Text(
+                'Quick Detect', 
+                style: TextStyle(
+                  color: Color(0xFF121212), 
+                  fontSize: 12, 
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      // --- The Notched Bottom Bar ---
+      bottomNavigationBar: BottomAppBar(
+        color: const Color(0xFF1A1A1A), 
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 8.0, 
+        child: SizedBox(
+          height: 65,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildBottomNavItem(Icons.map, 'Map', true, () {}),
+              _buildBottomNavItem(Icons.receipt_long, 'My Reports', false, () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const MyReportsScreen()));
+              }),
+              const SizedBox(width: 48), // Empty space for the center yellow button!
+              _buildBottomNavItem(Icons.notifications_none, 'Notifications', false, () {
+                debugPrint("Activity Clicked");
+              }),
+              _buildBottomNavItem(Icons.person_outline, 'Profile', false, () {
+                debugPrint("Profile Clicked");
+              }),
+            ],
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           // 1. The Interactive Map
@@ -79,9 +136,6 @@ class _MapScreenState extends State<MapScreen> {
 
           // 2. Glassmorphism Top Header
           _buildTopHeader(),
-
-          // 3. Floating "Quick Detect" Button
-          _buildBottomFAB(),
         ],
       ),
     );
@@ -144,7 +198,7 @@ class _MapScreenState extends State<MapScreen> {
               border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
                   'Tareeqi | طريقي',
@@ -155,12 +209,6 @@ class _MapScreenState extends State<MapScreen> {
                     letterSpacing: 1.2,
                   ),
                 ),
-                IconButton(
-                    icon: const Icon(Icons.menu, color: Colors.white, size: 28),
-                    onPressed: () {
-                      _scaffoldKey.currentState?.openDrawer();
-                    },
-                  ),
               ],
             ),
           ),
@@ -169,100 +217,27 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  // Builds the bottom action button
-  Widget _buildBottomFAB() {
-    return Positioned(
-      bottom: 40,
-      left: 40,
-      right: 40,
-      child: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFFFD700).withValues(alpha: 0.3),
-              blurRadius: 20,
-              spreadRadius: 2,
-              offset: const Offset(0, 5),
-            )
-          ],
-        ),
-        child: ElevatedButton.icon(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ReportDamageScreen()),
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFFFD700), // Bold Yellow
-            foregroundColor: const Color(0xFF121212), // Dark Text
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            elevation: 0, // Handled by Container shadow
-          ),
-          icon: const Icon(Icons.camera_alt, size: 24),
-          label: const Text(
-            'رصد سريع (Quick Detect)',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // --- Sidebar Drawer Widget ---
-  Widget _buildDrawer(BuildContext context) {
-    return Drawer(
-      backgroundColor: const Color(0xFF121212), // Keep the dark theme
-      child: ListView(
-        padding: EdgeInsets.zero,
+  // --- Bottom Nav Item Helper ---
+  Widget _buildBottomNavItem(IconData icon, String label, bool isSelected, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // The Header section of the sidebar
-          const UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: Color(0xFF1A1A1A), // Slightly lighter dark for contrast
-            ),
-            accountName: Text(
-              'Ahmad Ali Alsayyed Ahmad', 
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)
-            ),
-            accountEmail: Text(
-              'Tareeqi User', 
-              style: TextStyle(color: Colors.white70)
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Color(0xFFFFD700), // Yellow accent
-              child: Icon(Icons.person, size: 40, color: Color(0xFF121212)), // Dark icon
-            ),
+          Icon(
+            icon, 
+            color: isSelected ? const Color(0xFFFFD700) : Colors.white54, 
+            size: 24
           ),
-          
-          // Button 1: My Profile
-          ListTile(
-            leading: const Icon(Icons.person_outline, color: Colors.white),
-            title: const Text('الملف الشخصي (My Profile)', style: TextStyle(color: Colors.white)),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer first
-              // TODO: Navigate to Profile Screen when you build it!
-              debugPrint("Profile Clicked");
-            },
-          ),
-          
-          // Button 2: My Reports
-          ListTile(
-            leading: const Icon(Icons.list_alt, color: Colors.white),
-            title: const Text('بلاغاتي (My Reports)', style: TextStyle(color: Colors.white)),
-            onTap: () {
-              Navigator.pop(context); // Close the drawer first
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const MyReportsScreen()),
-              );
-            },
+          const SizedBox(height: 4),
+          Text(
+            label, 
+            style: TextStyle(
+              color: isSelected ? const Color(0xFFFFD700) : Colors.white54, 
+              fontSize: 10,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
           ),
         ],
       ),
